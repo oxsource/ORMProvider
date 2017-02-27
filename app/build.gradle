@@ -26,4 +26,5 @@ dependencies {
     })
     testCompile 'junit:junit:4.12'
     compile 'com.github.oxsource:ORMProvider:release-v1.0.0'
+//    compile project(':library')
 }
