@@ -97,10 +97,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
     //update
     private void update() {
         HostTable table = new HostTable();
-        table.setName("update baidu");
+        table.setHost(null);
         table.setHost("update http://www.baidu.com");
+        table.setVersion(3);
 
         SQLiteBuilder builder = new SQLiteBuilder(HostTable.class);
+        builder.columns("version");
         builder.whereEquals("name", "baidu");
 
         SQLiteResolver resolver = new SQLiteResolver(getApplicationContext());

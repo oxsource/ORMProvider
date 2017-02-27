@@ -81,26 +81,49 @@ public final class SQLiteUtils {
         return uri;
     }
 
-    public static List<Field> getColumnedFields(Class<?> clazz) {
-        List<Field> list = new ArrayList<>();
+    public static List<Field> getColumnedFields(Class<?> clazz, String... columns) {
+        List<Field> fieldList = new ArrayList<>();
         Field[] fields = clazz.getDeclaredFields();
         if (null == fields || fields.length == 0) {
-            return list;
+            return fieldList;
         }
-        for (int i = 0; i < fields.length; ++i) {
-            if (fields[i].getAnnotation(Column.class) != null) {
-                list.add(fields[i]);
+
+        List<String> colList = null;
+        if (null != columns && columns.length > 0) {
+            colList = new ArrayList<>();
+            for (String e : columns) {
+                colList.add(e);
             }
         }
-        return list;
+
+        for (int i = 0; i < fields.length; ++i) {
+            Column column;
+            if ((column = fields[i].getAnnotation(Column.class)) == null) {
+                continue;
+            }
+            //no columns
+            if (null == colList) {
+                fieldList.add(fields[i]);
+                continue;
+            }
+            //with columns
+            for (int j = 0; j < colList.size(); ++j) {
+                if (column.name().equals(colList.get(j))) {
+                    fieldList.add(fields[i]);
+                    colList.remove(j);
+                    break;
+                }
+            }
+        }
+        return fieldList;
     }
 
-    public static <T> ContentValues getContentValues(T obj) throws Exception {
+    public static <T> ContentValues getContentValues(T obj, String... columns) throws Exception {
         ContentValues values = new ContentValues();
         if (null == obj) {
             return values;
         }
-        List<Field> fields = getColumnedFields(obj.getClass());
+        List<Field> fields = getColumnedFields(obj.getClass(), columns);
         for (int i = 0; i < fields.size(); ++i) {
             Field field = fields.get(i);
             field.setAccessible(true);
@@ -110,12 +133,18 @@ public final class SQLiteUtils {
 
             switch (column.type()) {
                 case BLOB:
-                    if (value instanceof byte[]) {
+                    if (null == value && !column.notNull()) {
+                        String content = null;
+                        values.put(name, content);
+                    } else if (value instanceof byte[]) {
                         values.put(name, (byte[]) value);
                     }
                     break;
                 case TEXT:
-                    if (value instanceof String) {
+                    if (null == value && !column.notNull()) {
+                        String content = null;
+                        values.put(name, content);
+                    } else if (value instanceof String) {
                         values.put(name, (String) value);
                     }
                     break;

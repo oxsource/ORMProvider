@@ -53,7 +53,7 @@ public final class SQLiteResolver {
             Uri uri = SQLiteUtils.getTableUri(obj.getClass());
             builder = null == builder ? new SQLiteBuilder(obj.getClass()) : builder;
             SQLiteUtils.dLog("update = " + builder.toString());
-            ContentValues values = SQLiteUtils.getContentValues(obj);
+            ContentValues values = SQLiteUtils.getContentValues(obj, builder.columns());
             int lines = resolver.update(uri, values, builder.selection(), builder.selectionArgs());
             return lines;
         } catch (Exception e) {
@@ -69,7 +69,7 @@ public final class SQLiteResolver {
             Uri uri = SQLiteUtils.getTableUri(clazz);
             builder = null == builder ? new SQLiteBuilder(clazz) : builder;
             SQLiteUtils.dLog("query = " + builder.toString());
-            cursor = resolver.query(uri, builder.projection(), builder.selection(), builder.selectionArgs(), null);
+            cursor = resolver.query(uri, builder.columns(), builder.selection(), builder.selectionArgs(), null);
             List<T> objects = SQLiteUtils.getMappingObjects(clazz, cursor);
             if (null != objects && objects.size() > 0) {
                 list.addAll(objects);

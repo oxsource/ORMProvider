@@ -18,7 +18,7 @@ import ox.source.provider.anno.Table;
 public final class SQLiteBuilder {
 
     private final String tableName;
-    private final Map<String, String> projections = new HashMap<>();
+    private final List<String> columns = new ArrayList<>();
     private final StringBuffer selections = new StringBuffer();
     private final List<String> selectionArgs = new ArrayList<>();
 
@@ -52,22 +52,10 @@ public final class SQLiteBuilder {
     }
 
     /**
-     * 获取投影
+     * 获取列名
      */
-    public String[] projection() {
-        List<String> list = new ArrayList<>();
-        Iterator<Map.Entry<String, String>> it = projections.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<String, String> entry = it.next();
-            if (!TextUtils.isEmpty(entry.getValue())) {
-                list.add(entry.getValue());
-            }
-        }
-        String[] projection = null;
-        if (list.size() > 0) {
-            projection = list.toArray(new String[list.size()]);
-        }
-        return projection;
+    public String[] columns() {
+        return columns.toArray(new String[columns.size()]);
     }
 
     /**
@@ -88,7 +76,7 @@ public final class SQLiteBuilder {
     public String toString() {
         return "SQLiteBuilder{" +
                 "tableName='" + getTableName() + '\'' +
-                ", projections=" + projection() +
+                ", columns=" + columns() +
                 ", selections=" + selection() +
                 ", selectionArgs=" + selectionArgs() +
                 '}';
@@ -99,20 +87,19 @@ public final class SQLiteBuilder {
      **********/
 
     public SQLiteBuilder reset() {
-        projections.clear();
+        columns.clear();
         selections.setLength(0);
         selectionArgs.clear();
         return this;
     }
 
-    public SQLiteBuilder mapToTable(String column, String table) {
-        projections.put(column, table + "." + column);
-        return this;
-    }
-
-    public SQLiteBuilder map(String fromColumn, String toClause) {
-        projections.put(fromColumn, toClause + " AS " + fromColumn);
-        return this;
+    public void columns(String... args) {
+        if (null == args && 0 == args.length) {
+            return;
+        }
+        for (String e : args) {
+            columns.add(e);
+        }
     }
 
     public SQLiteBuilder where(String selection, String... args) {

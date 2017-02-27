@@ -21,6 +21,9 @@ public class HostTable {
     @Column(name = "host", type = Column.FieldType.TEXT, notNull = true)
     private String host;
 
+    @Column(name = "version", type = Column.FieldType.INTEGER, notNull = true)
+    private int version;
+
     public int getId() {
         return id;
     }
@@ -45,12 +48,21 @@ public class HostTable {
         this.host = host;
     }
 
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
+
     @Override
     public String toString() {
         return "HostTable{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", host='" + host + '\'' +
+                ", version='" + version + '\'' +
                 '}';
     }
 }
