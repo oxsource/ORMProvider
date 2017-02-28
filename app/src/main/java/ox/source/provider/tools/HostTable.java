@@ -12,16 +12,21 @@ import ox.source.provider.anno.Table;
         db = ToolsProvider.class,
         since = 1)
 public class HostTable {
-    @Column(name = "_id", type = Column.FieldType.INTEGER, primary = true, autoIncrement = true)
+    public final static String KEY_ID = "_id";
+    public final static String KEY_NAME = "name";
+    public final static String KEY_HOST = "host";
+    public final static String KEY_VERSION = "version";
+
+    @Column(name = KEY_ID, type = Column.FieldType.INTEGER, primary = true, autoIncrement = true)
     private int id;
 
-    @Column(name = "name", type = Column.FieldType.TEXT, notNull = true)
+    @Column(name = KEY_NAME, type = Column.FieldType.TEXT, notNull = true)
     private String name;
 
-    @Column(name = "host", type = Column.FieldType.TEXT, notNull = true)
+    @Column(name = KEY_HOST, type = Column.FieldType.TEXT, notNull = true)
     private String host;
 
-    @Column(name = "version", type = Column.FieldType.INTEGER, notNull = true)
+    @Column(name = KEY_VERSION, type = Column.FieldType.INTEGER, notNull = true)
     private int version;
 
     public int getId() {

@@ -83,7 +83,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     //delete
     private void delete() {
         SQLiteBuilder builder = new SQLiteBuilder(HostTable.class);
-        builder = builder.whereEquals("_id", "1");
+        builder = builder.whereEquals(HostTable.KEY_ID, "1");
 
         SQLiteResolver resolver = new SQLiteResolver(getApplicationContext());
         int lines = resolver.delete(HostTable.class, builder);
@@ -102,8 +102,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
         table.setVersion(3);
 
         SQLiteBuilder builder = new SQLiteBuilder(HostTable.class);
-        builder.columns("version");
-        builder.whereEquals("name", "baidu");
+        builder.columns(HostTable.KEY_VERSION);
+        builder.whereEquals(HostTable.KEY_NAME, "baidu");
 
         SQLiteResolver resolver = new SQLiteResolver(getApplicationContext());
         int lines = resolver.update(table, builder);
