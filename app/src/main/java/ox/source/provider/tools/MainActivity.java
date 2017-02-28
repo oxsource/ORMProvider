@@ -57,6 +57,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private void query() {
         tv.setText("");
         SQLiteBuilder builder = new SQLiteBuilder(HostTable.class);
+        builder.whereEquals(HostTable.KEY_ID, "2");
+
         SQLiteResolver resolver = new SQLiteResolver(getApplicationContext());
         List<HostTable> lists = resolver.query(HostTable.class, builder);
         for (HostTable e : lists) {

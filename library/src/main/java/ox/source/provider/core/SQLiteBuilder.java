@@ -74,11 +74,31 @@ public final class SQLiteBuilder {
 
     @Override
     public String toString() {
+        StringBuffer columnSbf = new StringBuffer();
+        columnSbf.append("[");
+        for (String e : columns()) {
+            columnSbf.append(e + ",");
+        }
+        if (columnSbf.length() > 1) {
+            columnSbf.setLength(columnSbf.length() - 1);
+        }
+        columnSbf.append("]");
+
+        StringBuffer argSbf = new StringBuffer();
+        argSbf.append("[");
+        for (String e : selectionArgs()) {
+            argSbf.append(e + ",");
+        }
+        if (argSbf.length() > 1) {
+            argSbf.setLength(argSbf.length() - 1);
+        }
+        argSbf.append("]");
+
         return "SQLiteBuilder{" +
                 "tableName='" + getTableName() + '\'' +
-                ", columns=" + columns() +
+                ", columns=" + columnSbf.toString() +
                 ", selections=" + selection() +
-                ", selectionArgs=" + selectionArgs() +
+                ", selectionArgs=" + argSbf.toString() +
                 '}';
     }
 
