@@ -16,7 +16,7 @@ public @interface DataBase {
 
     String authority();
 
-    Class<?>[] tables();
+    Class<?>[] tables() default {};
 
     int since() default 1;
 }

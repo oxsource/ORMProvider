@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ox.source.provider.core.SQLiteBuilder;
-import ox.source.provider.core.SQLiteResolver;
 
 public class MainActivity extends Activity implements View.OnClickListener {
 
@@ -56,11 +55,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
     //query
     private void query() {
         tv.setText("");
-        SQLiteBuilder builder = new SQLiteBuilder(HostTable.class);
-        builder.whereEquals(HostTable.KEY_ID, "2");
-
-        SQLiteResolver resolver = new SQLiteResolver(getApplicationContext());
-        List<HostTable> lists = resolver.query(HostTable.class, builder);
+        SQLiteBuilder<HostTable> builder = new SQLiteBuilder(getBaseContext(), HostTable.class);
+        builder.whereEquals(HostTable.KEY_ID, "1");
+        List<HostTable> lists = builder.query();
         for (HostTable e : lists) {
             tv.append(e.toString() + "\n");
         }
@@ -68,13 +65,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     //insert
     private void insert() {
-        SQLiteResolver resolver = new SQLiteResolver(getApplicationContext());
-        List<HostTable> lists = new ArrayList<>();
+        SQLiteBuilder<HostTable> builder = new SQLiteBuilder(getBaseContext(), HostTable.class);
+
+        List<HostTable> list = new ArrayList<>();
         HostTable table = new HostTable();
         table.setHost("http://www.baidu.com");
         table.setName("baidu");
-        lists.add(table);
-        int lines = resolver.insert(lists);
+        int lines = builder.insert(table);
         if (lines > 0) {
             showMessage("成功插入" + lines + "行");
         } else {
@@ -84,11 +81,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     //delete
     private void delete() {
-        SQLiteBuilder builder = new SQLiteBuilder(HostTable.class);
+        SQLiteBuilder<HostTable> builder = new SQLiteBuilder(getBaseContext(), HostTable.class);
         builder = builder.whereEquals(HostTable.KEY_ID, "1");
-
-        SQLiteResolver resolver = new SQLiteResolver(getApplicationContext());
-        int lines = resolver.delete(HostTable.class, builder);
+        int lines = builder.delete();
         if (lines > 0) {
             showMessage("成功删除!");
         } else {
@@ -103,12 +98,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
         table.setHost("update http://www.baidu.com");
         table.setVersion(3);
 
-        SQLiteBuilder builder = new SQLiteBuilder(HostTable.class);
+        SQLiteBuilder<HostTable> builder = new SQLiteBuilder(getBaseContext(), HostTable.class);
         builder.columns(HostTable.KEY_VERSION);
         builder.whereEquals(HostTable.KEY_NAME, "baidu");
-
-        SQLiteResolver resolver = new SQLiteResolver(getApplicationContext());
-        int lines = resolver.update(table, builder);
+        int lines = builder.update(table);
         if (lines > 0) {
             showMessage("成功修改" + lines + "行");
         } else {
